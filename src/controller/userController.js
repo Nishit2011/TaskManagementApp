@@ -28,8 +28,33 @@ exports.loginUser = async (req, res) =>{
     }
 }
 
-exports.getMe = async (req,res)=>{
+exports.logoutUser = async(req, res) =>{
     
+    try {
+        req.user.tokens =  await req.user.tokens.filter(token=> token.token !== req.token);
+        
+        await req.user.save();
+        console.log(req.user)
+        res.send()
+        
+    } catch (error) {
+        res.status(500).send()
+    }
+  
+}
+
+exports.logoutAll = async(req, res) =>{
+    try {
+        req.user.tokens = [];
+        await req.user.save();
+        res.send();
+    } catch (error) {
+        res.status(500).send();
+    }
+
+}
+
+exports.getMe = async (req,res)=>{
    res.send(req.user)
 }
 
