@@ -98,12 +98,33 @@ exports.deleteUser = async (req,res) =>{
         res.status(500).send();
     }
 }
-
+// GET //user/getTasks?isCompleted=true
+// GET /user/getTasks?limit=2&skip=3
 exports.getOwnTasks = async(req, res) =>{
+    const match = {};
+    const sort = {}
+    if(req.query.isCompleted){
+        match.isCompleted = req.query.isCompleted === "true"
+    }
+    const sortByParams = req.query.sortBy;
+    // const sortByFieldName = sortByParams.split(":")[0];
+    // const sortCriteria = sortByParams.split(":")[1] === "asc"? 1: -1;
+    // console.log(sortByFieldName, sortCriteria)
+
+    if(sortByParams){
+        const parts = req.query.sortBy.split(":")
+        sort[parts[0]] = parts[1] === "desc" ? -1 :1
+    }
     
-    const user = await User.findById(req.user._id);
-   
-    await user.populate('tasks').execPopulate();
-    console.log(user.tasks)
-    res.send({tasks:user.tasks});
+    try {
+        await req.user.populate({path:'tasks', match, options:{
+            limit: parseInt(req.query.limit),
+            skip:parseInt(req.query.skip),
+            sort
+        }}).execPopulate();
+        res.send(req.user.tasks);
+    } catch (error) {
+        res.status(500).send()
+    }
+  
 }
