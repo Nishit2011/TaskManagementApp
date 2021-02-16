@@ -58,18 +58,18 @@ exports.getMe = async (req,res)=>{
    res.send(req.user)
 }
 
-exports.getUserById = async(req,res)=>{
-    try {
-        const user = await User.findById(req.params.id);
-        if(!user) return res.status(400).send()
-        res.status(200).send({name:user.name})
-    } catch (error) {
-        res.status(500).send()
-    }
+// exports.getUserById = async(req,res)=>{
+//     try {
+//         const user = await User.findById(req.params.id);
+//         if(!user) return res.status(400).send()
+//         res.status(200).send({name:user.name})
+//     } catch (error) {
+//         res.status(500).send()
+//     }
     
-}
+// }
 
-exports.updateUserById  = async(req,res)=>{
+exports.updateUser  = async(req,res)=>{
     const updates = Object.keys(req.body)
     const allowedUpdates = ["name", "email", "password", "isIndian"];
     const isValidOperation = updates.every((update)=> allowedUpdates.includes(update))
@@ -78,28 +78,32 @@ exports.updateUserById  = async(req,res)=>{
         return res.status(400).send({error: "Invalid updates"})
     }
     try {
-        const user = await User.findById(req.params.id);
-        updates.forEach((update)=>{
-            user[update] = req.body[update]
-        })
+        const user = await User.findById(req.user._id);
+        updates.forEach((update)=>user[update] = req.body[update])
         await user.save()
-        if(!user) return res.status(404).send();
+       
         res.status(200).send(user)
     } catch (error) {
         res.status(500).send()
     }
 }
 
-exports.deleteUserById = async (req,res) =>{
-    console.log(req.params.id)
+exports.deleteUser = async (req,res) =>{
+    
     try {
-       const user = await User.findByIdAndDelete(req.params.id)
-       if(!user){
-           return res.status(404).send()
-       }
-       res.status(200).send(user)
+        req.user.remove()
+       res.status(200).send()
     
     } catch (error) {
         res.status(500).send();
     }
+}
+
+exports.getOwnTasks = async(req, res) =>{
+    
+    const user = await User.findById(req.user._id);
+   
+    await user.populate('tasks').execPopulate();
+    console.log(user.tasks)
+    res.send({tasks:user.tasks});
 }

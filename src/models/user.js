@@ -56,6 +56,22 @@ userSchema.statics.findUserByLoginPassword = async (email, password) =>{
    return user;
 }
 
+
+userSchema.virtual('tasks',{
+    ref: 'Task',
+    localField: '_id',
+    foreignField: 'creator'
+})
+
+userSchema.methods.toJSON = function(){
+    const user = this;
+    const userObject = user.toObject();
+    delete userObject.password
+    delete userObject.tokens
+    return userObject
+   
+}
+
 //instance methods work on individual instance of Model/documents
 userSchema.methods.getAuthToken =  async function(){
     const user = this;
