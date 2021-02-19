@@ -23,6 +23,7 @@ const userSchema = mongoose.Schema(
       type: String,
       minlength: 6,
       trim: true,
+      required:true,
       validate(value) {
         if (value === "password") {
           throw new Error("Password cant be password");
@@ -94,7 +95,7 @@ userSchema.pre("save", async function (next) {
   next();
 });
 
-userSchema.pre("remove", async function (req, res) {
+userSchema.pre("remove", async function (next) {
   const user = this;
   const task = await Task.deleteMany({ creator: user._id });
   next();

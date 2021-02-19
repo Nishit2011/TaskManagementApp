@@ -2,7 +2,8 @@ const mongoose = require("mongoose");
 const colors = require("colors");
 
 const connectDB = async () => {
-  const conn = await mongoose.connect("mongodb://localhost:27017/task-app", {
+    // console.log(process.env.MONGO_DB_URL)
+  const conn = await mongoose.connect(process.env.MONGO_DB_URL, {
     useCreateIndex: true,
     useNewUrlParser: true,
     useUnifiedTopology: true,

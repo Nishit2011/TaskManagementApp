@@ -9,6 +9,7 @@ const {
   logoutUser,
   logoutAll,
   getOwnTasks,
+ 
 } = require("../controller/userController");
 const router = new express.Router();
 
@@ -22,6 +23,7 @@ router
   .post("/user/login", loginUser)
   .post("/user/me/logout", auth, logoutUser)
   .post("/user/logoutAll", auth, logoutAll)
-  .get("/user/getTasks", auth, getOwnTasks);
+  .get("/user/getTasks", auth, getOwnTasks)
+  
 
 module.exports = router;

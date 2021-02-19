@@ -1,28 +1,5 @@
-const express = require("express");
-const bcryptjs = require("bcryptjs");
-const jwt = require("jsonwebtoken");
 
-const connectDB = require("./src/db/mongoose");
-const userRoute = require("./src/routes/userRoutes");
-const taskRoute = require("./src/routes/taskRoute");
-
-require("colors");
-connectDB();
-
-const app = express();
-
-//POC on middleware
-
-// app.use((req,res,next)=>{
-//     res.status(503).send("Server under maintenance!");
-
-// })
-
-app.use(express.json());
-
-app.use(userRoute);
-app.use(taskRoute);
-
+const app = require("./app");
 // Hash Fn POC
 
 // const hashFn = async () =>{
@@ -46,9 +23,7 @@ app.use(taskRoute);
 // }
 
 // jwtFn();
-app.use("/", (req, res) => {
-  res.json({ message: "Server is up!!!" });
-});
-app.listen(3000, () =>
-  console.log(`Server is listening on ${3000}`.bold.yellow)
+const PORT = process.env.PORT;
+app.listen(PORT, () =>
+  console.log(`Server is listening on ${PORT}`.bold.yellow)
 );

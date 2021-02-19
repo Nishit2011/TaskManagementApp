@@ -1,6 +1,6 @@
 const Task = require("../models/task");
 
-exports.addTask = async (req, res) => {
+exports.addTask = async (req, res, next) => {
   try {
     const task = new Task({
       ...req.body,
@@ -11,11 +11,11 @@ exports.addTask = async (req, res) => {
 
     res.status(201).send(task);
   } catch (error) {
-    res.status(400).send();
+    next(error)
   }
 };
 
-exports.getTasksById = async (req, res) => {
+exports.getTasksById = async (req, res, next) => {
   const _id = req.params.id;
   try {
     const tasks = await Task.findOne({ _id, creator: req.user._id });
@@ -25,11 +25,11 @@ exports.getTasksById = async (req, res) => {
     }
     res.send(tasks);
   } catch (error) {
-    res.status(500).send();
+    next(error)
   }
 };
 
-exports.editTaskById = async (req, res) => {
+exports.editTaskById = async (req, res, error) => {
   const updates = Object.keys(req.body);
   const _id = req.params.id;
   console.log(updates);
@@ -47,17 +47,17 @@ exports.editTaskById = async (req, res) => {
     await task.save();
     res.status(200).send(task);
   } catch (error) {
-    res.status(500).send();
+    next(error)
   }
 };
 
-exports.deleteTaskById = async (req, res) => {
+exports.deleteTaskById = async (req, res, error) => {
   const _id = req.params.id;
   try {
     const task = await Task.findOne({ _id, creator: req.user._id });
     await task.remove();
     res.status(200).send();
   } catch (error) {
-    res.status(500).send();
+    next(error)
   }
 };
