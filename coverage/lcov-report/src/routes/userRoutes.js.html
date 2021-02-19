@@ -130,7 +130,7 @@ const {
 } = require("../controller/userController");
 const router = new express.Router();
 &nbsp;
-const auth = require("../middleware/auth");
+const auth = require("../middleware/authenticate");
 &nbsp;
 router
   .post("/user", addUser)

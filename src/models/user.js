@@ -8,14 +8,15 @@ const userSchema = mongoose.Schema(
   {
     name: {
       type: String,
-      required: true,
+      required: [true, "Name is required."],
     },
     email: {
       type: String,
-      unique: true,
+      unique: true,required:[true, "Please enter email."],
+
       validate(value) {
         if (!validator.isEmail(value)) {
-          throw new Error("Email is invalid");
+          throw new Error("Email is invalid.");
         }
       },
     },
@@ -23,12 +24,17 @@ const userSchema = mongoose.Schema(
       type: String,
       minlength: 6,
       trim: true,
-      required:true,
+      required:[true, "Please enter password."],
       validate(value) {
         if (value === "password") {
-          throw new Error("Password cant be password");
+          throw new Error("Password cant be password.");
         }
       },
+    },
+    role: {
+      type: String,
+      enum: ["admin", "user"],
+      default: "user"
     },
     tokens: [
       {

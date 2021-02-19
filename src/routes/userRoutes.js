@@ -13,7 +13,7 @@ const {
 } = require("../controller/userController");
 const router = new express.Router();
 
-const auth = require("../middleware/auth");
+const auth = require("../middleware/authenticate");
 
 router
   .post("/user", addUser)

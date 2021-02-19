@@ -10,7 +10,8 @@ exports.addUser = async (req, res, next) => {
     const token = await user.getAuthToken();
     res.status(201).send({ user, token });
   } catch (error) {
-    next(new ErrorResponse("Cannot add user", 401))
+  
+    next(new ErrorResponse(error, 400))
   }
 };
 
@@ -25,7 +26,7 @@ exports.loginUser = async (req, res, next) => {
 
     res.send({ user, token });
   } catch (error) {
-   next(error)
+    next(new ErrorResponse(error, 400))
   }
 };
 
@@ -39,7 +40,7 @@ exports.logoutUser = async (req, res, next) => {
     console.log(req.user);
     res.send();
   } catch (error) {
-    next(error)
+    next(new ErrorResponse(error, 404))
   }
 };
 
@@ -49,7 +50,7 @@ exports.logoutAll = async (req, res, next) => {
     await req.user.save();
     res.send();
   } catch (error) {
-    next(error)
+    next(new ErrorResponse(error, 500))
   }
 };
 
@@ -85,7 +86,7 @@ exports.updateUser = async (req, res, next) => {
 
     res.status(200).send(user);
   } catch (error) {
-    next(error)
+    next(new ErrorResponse(error, 500))
   }
 };
 
@@ -95,7 +96,7 @@ exports.deleteUser = async (req, res, error) => {
     sendAccountDeletionMail(req.user.email, req.user.name);
     res.status(200).send();
   } catch (error) {
-    next(error)
+    next(new ErrorResponse(error, 500))
   }
 };
 // GET //user/getTasks?isCompleted=true
@@ -130,6 +131,6 @@ exports.getOwnTasks = async (req, res, next) => {
       .execPopulate();
     res.send(req.user.tasks);
   } catch (error) {
-    rnext(error)
+    next(new ErrorResponse(error, 500))
   }
 };

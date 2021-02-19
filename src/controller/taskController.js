@@ -1,5 +1,5 @@
 const Task = require("../models/task");
-
+const ErrorResponse = require("../utils/ErrorResponse");
 exports.addTask = async (req, res, next) => {
   try {
     const task = new Task({
@@ -11,7 +11,7 @@ exports.addTask = async (req, res, next) => {
 
     res.status(201).send(task);
   } catch (error) {
-    next(error)
+    next(new ErrorResponse(error, 401))
   }
 };
 
@@ -21,15 +21,15 @@ exports.getTasksById = async (req, res, next) => {
     const tasks = await Task.findOne({ _id, creator: req.user._id });
 
     if (!tasks) {
-      return res.status(400).send("No tasks found");
+      return next(new ErrorResponse("No task found.", 500))
     }
     res.send(tasks);
   } catch (error) {
-    next(error)
+    next(new ErrorResponse(error, 401))
   }
 };
 
-exports.editTaskById = async (req, res, error) => {
+exports.editTaskById = async (req, res, next) => {
   const updates = Object.keys(req.body);
   const _id = req.params.id;
   console.log(updates);
@@ -47,17 +47,19 @@ exports.editTaskById = async (req, res, error) => {
     await task.save();
     res.status(200).send(task);
   } catch (error) {
-    next(error)
+    next(new ErrorResponse(error, 400))
   }
 };
 
-exports.deleteTaskById = async (req, res, error) => {
+exports.deleteTaskById = async (req, res, next) => {
   const _id = req.params.id;
+
   try {
-    const task = await Task.findOne({ _id, creator: req.user._id });
+    
+    const task = await Task.findOne({ _id});
     await task.remove();
     res.status(200).send();
   } catch (error) {
-    next(error)
+    next(new ErrorResponse(error, 400))
   }
 };

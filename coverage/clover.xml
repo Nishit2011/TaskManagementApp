@@ -118,7 +118,7 @@
     </package>
     <package name="src.middleware">
       <metrics statements="14" coveredstatements="13" conditionals="2" coveredconditionals="1" methods="1" coveredmethods="1"/>
-      <file name="auth.js" path="/Users/nishranjan/NodeProjects/task-management/src/middleware/auth.js">
+      <file name="auth.js" path="/Users/nishranjan/NodeProjects/task-management/src/middleware/authenticate.js">
         <metrics statements="14" coveredstatements="13" conditionals="2" coveredconditionals="1" methods="1" coveredmethods="1"/>
         <line num="1" count="2" type="stmt"/>
         <line num="2" count="2" type="stmt"/>
